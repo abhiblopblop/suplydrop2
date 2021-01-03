@@ -1,82 +1,85 @@
-var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
-var packageBody,ground
 const Engine = Matter.Engine;
-const World = Matter.World;
+const World= Matter.World;
 const Bodies = Matter.Bodies;
-const Body = Matter.Body;
+const Constraint = Matter.Constraint;
 
-function preload()
-{
-	helicopterIMG=loadImage("helicopter.png")
-	packageIMG=loadImage("package.png")
+var engine, world;
+var bird1
+var backgroundImg,platform;
+
+function preload() {
+    backgroundImg = loadImage("sprites/bg.png");
 }
 
-function setup() {
-	createCanvas(800, 700);
-	rectMode(CENTER);
-	
-
-	packageSprite=createSprite(width/2, 80, 10,10);
-	packageSprite.addImage(packageIMG)
-	packageSprite.scale=0.1
-
-	helicopterSprite=createSprite(width/2, 200, 10,10);
-	helicopterSprite.addImage(helicopterIMG)
-	helicopterSprite.scale=0.6
-
-	groundSprite=createSprite(width/2, height-35, width,10);
-	groundSprite.shapeColor=color(255)
+function setup(){
+    var canvas = createCanvas(1200,400);
+    engine = Engine.create();
+    world = engine.world;
 
 
-	engine = Engine.create();
-	world = engine.world;
-
-	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:.5, isStatic:true});
-	World.add(world, packageBody);
-	
-
-	//Create a Ground
-	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
- 	World.add(world, ground);
-
-
-	Engine.run(engine);
-
-	box1= new Box(width/2,height-50,200,10)
-	box2= new Box(295,height-70,10,50)
-	box3= new Box(505,height-70,10,50)
+    
 
   
-}
+    log1 = new Log(375,100,300, PI/2, true);
 
 
-function draw() {
-  rectMode(CENTER);
-  background(0);
-  packageSprite.x= packageBody.position.x 
-  packageSprite.y= packageBody.position.y 
+
+    bird1 = new Bird(480,130);
+    bird2 = new Bird(430,130);
+    bird3 = new Bird(380,130);
+    bird4 = new Bird(330,130);
+    bird5 = new Bird(280,130);
+
+   // log6 = new Log(300,300,70,PI);
+
+    chain1 = new Chain(bird1.body, { x: 480, y: 100 })
+    chain2 = new Chain(bird2.body, { x: 439, y: 100 })
+    chain3 = new Chain(bird3.body, { x: 380, y: 100 })
+    chain4 = new Chain(bird4.body, { x: 330, y: 100 })
+    chain5 = new Chain(bird5.body, { x: 280, y: 100 })
+   
+
+
+    }
+
+function draw(){
+    background(backgroundImg);
+    Engine.update(engine);
  
+   
+    log1.display();
 
-  keyPressed();
 
-  drawSprites();
-  box1.display();
-  box2.display();
-  box3.display();
- 
-}
+    chain1.display();
+    chain2.display();
+    chain3.display();
+    chain4.display();
+    chain5.display();
 
-function keyPressed() {
- if (keyCode === DOWN_ARROW) {
-    // Look at the hints in the document and understand how to make the package body fall only on press of the Down arrow key.
-	  Matter.Body.setStatic(packageBody, false)
-	  
-	  Matter.Body.set(packageBody, {restitution: 0.5})
- 
-}
+    bird1.display();
+    bird2.display();
+    bird3.display();
+    bird4.display();
+    bird5.display();
+   
 
+    
+    
     
 }
 
+function mouseDragged(){
+
+Matter.Body.setPosition(bird1.body, { x: mouseX, y: mouseY } )
+
+}
+
+function keyPressed(){
+    if (keyCode === UP_ARROW){
+  
+      Matter.Body.applyForce( bird1 , bird1.position , {x: 220 , y: 100});
+    
+    }
+  }
 
 
